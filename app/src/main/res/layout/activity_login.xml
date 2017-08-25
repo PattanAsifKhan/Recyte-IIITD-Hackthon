@@ -9,17 +9,24 @@
     tools:context="tech.geeksquad.recyte.LoginActivity">
 
     <EditText
-        android:id="@+id/phone"
+        android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/phone"
-        android:inputType="phone" />
+        android:hint="Email"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword" />
 
     <Button
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
-        android:onClick="login"
         android:layout_height="wrap_content"
+        android:onClick="login"
         android:text="@string/login" />
 
 </LinearLayout>
