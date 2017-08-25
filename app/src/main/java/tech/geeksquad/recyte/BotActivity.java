@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,15 +30,16 @@ import ai.api.model.AIResponse;
 
 public class BotActivity extends AppCompatActivity {
 
-    AIConfiguration config;
-
-    AIListener aiListener;
-    AIService aiService;
-    FirebaseDatabase database;
-    DatabaseReference reference;
-    ArrayList<Message> messageArrayList;
+    private AIConfiguration config;
+    private AIListener aiListener;
+    private AIService aiService;
+    private FirebaseDatabase database;
+    private DatabaseReference reference;
+    private ArrayList<Message> messageArrayList;
+    private ArrayAdapter<Message> adapter;
     private String TAG = "bot_activity";
     private AIDataService aiDataService;
+    private ListView messageListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +51,19 @@ public class BotActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("messages").child(user.getUid());
 
+        messageListView = (ListView) findViewById(R.id.message_list);
+
         init();
 
         messageArrayList = new ArrayList<>();
+        adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1, messageArrayList);
+        messageListView.setAdapter(adapter);
 
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
+                Message message = dataSnapshot.getValue(Message.class);
+                messageArrayList.add(message);
             }
 
             @Override
