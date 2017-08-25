@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "801837547145-alv3bk33h9rlkcvplo7robk94bdngv2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.geeksquad.recyte",
+            "certificate_hash": "92d641e6f8ca9a61b2bdc7dd5538a2e49bf97622"
+          }
+        },
+        {
           "client_id": "801837547145-974e73g1tj8rdi4o7gvbkccackjpfthr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
