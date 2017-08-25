@@ -50,15 +50,15 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         if (!email.matches(emailPattern)) {
-            emailEditText.setError(getString(R.string.invalid_email));
+            emailEditText.setError("Invalid email");
             return;
         }
         if (password.length() < 6) {
-            passwordEditText.setError(getString(R.string.min_pass_length_req));
+            passwordEditText.setError("Min password length is 6");
             return;
         }
         final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getString(R.string.please_wait));
+        dialog.setMessage("Please wait ");
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         dialog.setIndeterminate(true);
         dialog.setProgressNumberFormat(null);
@@ -70,9 +70,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                        builder.setTitle(getString(R.string.unable_to_sign_in))
+                        builder.setTitle("Unable to sign in")
                                 .setMessage(e.getMessage())
-                                .setPositiveButton(getString(R.string.close), null);
+                                .setPositiveButton("close", null);
                         builder.show();
                     }
                 }).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
