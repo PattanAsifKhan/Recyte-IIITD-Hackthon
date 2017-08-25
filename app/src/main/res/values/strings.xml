@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Recyte</string>
+    <string name="phone">Phone</string>
+    <string name="login">Login</string>
 </resources>
