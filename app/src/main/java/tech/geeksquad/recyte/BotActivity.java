@@ -56,7 +56,7 @@ public class BotActivity extends AppCompatActivity {
         init();
 
         messageArrayList = new ArrayList<>();
-        adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1, messageArrayList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, messageArrayList);
         messageListView.setAdapter(adapter);
 
         reference.addChildEventListener(new ChildEventListener() {
@@ -64,6 +64,7 @@ public class BotActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message message = dataSnapshot.getValue(Message.class);
                 messageArrayList.add(message);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -136,8 +137,10 @@ public class BotActivity extends AppCompatActivity {
 
     public void sendMessage(View view) {
         EditText messageEditText = (EditText) findViewById(R.id.message);
-        String message = messageEditText.getText().toString();
-        new messageSendAsyncTask().execute(message);
+        String messageString = messageEditText.getText().toString();
+        Message message = new Message("user", messageString);
+        reference.child(String.valueOf(System.currentTimeMillis())).setValue(message);
+        new messageSendAsyncTask().execute(messageString);
     }
 
     private class messageSendAsyncTask extends AsyncTask<String, Object, AIResponse> {
@@ -149,6 +152,8 @@ public class BotActivity extends AppCompatActivity {
                 Log.d(TAG, "doInBackground: after call");
 
                 Log.d(TAG, "doInBackground: " + hello.getResult().getFulfillment().getSpeech());
+                Message message = new Message("user", hello.getResult().getFulfillment().getSpeech());
+                reference.child(String.valueOf(System.currentTimeMillis())).setValue(message);
                 return hello;
             } catch (AIServiceException e) {
                 Log.e(TAG, "doInBackground: ", e);
