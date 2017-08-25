@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "801837547145",
+    "firebase_url": "https://recyte-hackiiitd.firebaseio.com",
+    "project_id": "recyte-hackiiitd",
+    "storage_bucket": "recyte-hackiiitd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801837547145:android:3106d530a5efd692",
+        "android_client_info": {
+          "package_name": "tech.geeksquad.recyte"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "801837547145-974e73g1tj8rdi4o7gvbkccackjpfthr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.geeksquad.recyte",
+            "certificate_hash": "833ca786f9b2de5e7e606f937cd0f38428214559"
+          }
+        },
+        {
+          "client_id": "801837547145-pu52nc6p1i07ebbq4d3tcq4dafbq1cuo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8h8EPmtEaYotPUHA1_wIp3hYbN0KKYtw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801837547145-pu52nc6p1i07ebbq4d3tcq4dafbq1cuo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
