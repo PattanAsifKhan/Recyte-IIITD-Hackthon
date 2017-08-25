@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
+    android:background="@drawable/bg2"
     android:padding="20dp"
     tools:context="tech.geeksquad.recyte.LoginActivity">
 
@@ -13,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
+        android:textColorHint="#000"
         android:inputType="textEmailAddress" />
 
     <EditText
@@ -20,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
+        android:textColorHint="#000"
         android:inputType="textPassword" />
 
     <Button
@@ -27,6 +30,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="login"
+        android:textColor="#000"
+        android:background="#fff"
         android:text="@string/login" />
 
 </LinearLayout>
