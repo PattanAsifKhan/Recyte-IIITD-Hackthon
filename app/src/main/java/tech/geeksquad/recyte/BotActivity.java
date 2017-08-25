@@ -1,11 +1,20 @@
 package tech.geeksquad.recyte;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import ai.api.AIListener;
@@ -29,6 +40,7 @@ import ai.api.model.AIResponse;
 
 public class BotActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_IMAGE = 1;
     private AIConfiguration config;
     private AIListener aiListener;
     private AIService aiService;
@@ -145,6 +157,60 @@ public class BotActivity extends AppCompatActivity {
     }
 
     public void sendPicture(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, REQUEST_CODE_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_IMAGE && resultCode == RESULT_OK &&
+                data != null && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                ImageView imageView = new ImageView(this);
+                final Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                imageView.setImageBitmap(bitmap);
+                LinearLayout linearLayout = new LinearLayout(this);
+                linearLayout.setGravity(Gravity.CENTER);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(400, 400);
+                imageView.setLayoutParams(layoutParams);
+                linearLayout.addView(imageView);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(getString(R.string.upload_image))
+                        .setMessage(getString(R.string.upload_confirm_prompt))
+                        .setView(linearLayout)
+                        .setPositiveButton(getString(R.string.upload), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                uploadImage(bitmap);
+                            }
+                        }).setNegativeButton(getString(R.string.cancel), null)
+                        .setCancelable(false);
+                builder.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void uploadImage(Bitmap bitmap) {
+        int byteCount = bitmap.getByteCount() / 1024;
+
+        int quality = 100;
+        if (byteCount > 500) {
+            quality = 100 * 500 / byteCount;
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        byte[] data = baos.toByteArray();
+
+
     }
 
     private class messageSendAsyncTask extends AsyncTask<String, Object, AIResponse> {
@@ -156,7 +222,7 @@ public class BotActivity extends AppCompatActivity {
                 Log.d(TAG, "doInBackground: after call");
 
                 Log.d(TAG, "doInBackground: " + hello.getResult().getFulfillment().getSpeech());
-                Message message = new Message("bot", hello.getResult().getFulfillment().getSpeech().replaceAll("/n","\n"));
+                Message message = new Message("bot", hello.getResult().getFulfillment().getSpeech().replaceAll("/n", "\n"));
                 reference.child(String.valueOf(System.currentTimeMillis())).setValue(message);
                 return hello;
             } catch (AIServiceException e) {
@@ -166,4 +232,5 @@ public class BotActivity extends AppCompatActivity {
             return null;
         }
     }
+
 }
