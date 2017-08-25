@@ -16,7 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DashBoardActivity"></activity>
+        <activity android:name=".DashBoardActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".BotActivity" />
+        <activity android:name=".OrdersActivity" />
+        <activity android:name=".IndustryContactActivity"></activity>
     </application>
 
 </manifest>

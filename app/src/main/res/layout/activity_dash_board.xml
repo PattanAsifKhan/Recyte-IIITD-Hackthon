@@ -18,6 +18,7 @@
       android:id="@+id/logo"
       android:layout_width="0dp"
       android:layout_height="120dp"
+      android:onClick="profile"
       android:layout_margin="10dp"
       android:layout_weight="1">
 
@@ -35,6 +36,7 @@
       android:layout_width="0dp"
       android:layout_height="120dp"
       android:layout_margin="10dp"
+      android:onClick="bot"
       android:layout_weight="1"
       android:elevation="3dp">
 
@@ -55,6 +57,7 @@
       android:layout_width="0dp"
       android:layout_height="120dp"
       android:layout_margin="10dp"
+      android:onClick="orders"
       android:layout_weight="1">
    <android.support.v4.widget.CircleImageView
        android:layout_width="wrap_content"
@@ -71,6 +74,7 @@
       android:layout_height="120dp"
       android:layout_margin="10dp"
       android:layout_weight="1"
+      android:onClick="industry"
       android:elevation="3dp">
    <android.support.v4.widget.CircleImageView
        android:layout_width="wrap_content"
