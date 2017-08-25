@@ -8,6 +8,6 @@
         android:id="@+id/bottext"
         android:text="message"
         android:background="@drawable/botoutput"
-        android:textSize="25sp"/>
+        android:autoLink="all"/>
 
 </LinearLayout>

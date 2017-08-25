@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -36,7 +35,7 @@ public class BotActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference reference;
     private ArrayList<Message> messageArrayList;
-    private ArrayAdapter<Message> adapter;
+    private ChatAdapter adapter;
     private String TAG = "bot_activity";
     private AIDataService aiDataService;
     private ListView messageListView;
@@ -56,7 +55,7 @@ public class BotActivity extends AppCompatActivity {
         init();
 
         messageArrayList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, messageArrayList);
+        adapter = new ChatAdapter(this, messageArrayList);
         messageListView.setAdapter(adapter);
 
         reference.addChildEventListener(new ChildEventListener() {
@@ -65,6 +64,7 @@ public class BotActivity extends AppCompatActivity {
                 Message message = dataSnapshot.getValue(Message.class);
                 messageArrayList.add(message);
                 adapter.notifyDataSetChanged();
+                messageListView.smoothScrollToPosition(messageArrayList.size());
             }
 
             @Override
@@ -141,6 +141,7 @@ public class BotActivity extends AppCompatActivity {
         Message message = new Message("user", messageString);
         reference.child(String.valueOf(System.currentTimeMillis())).setValue(message);
         new messageSendAsyncTask().execute(messageString);
+        messageEditText.setText("");
     }
 
     private class messageSendAsyncTask extends AsyncTask<String, Object, AIResponse> {
@@ -152,7 +153,7 @@ public class BotActivity extends AppCompatActivity {
                 Log.d(TAG, "doInBackground: after call");
 
                 Log.d(TAG, "doInBackground: " + hello.getResult().getFulfillment().getSpeech());
-                Message message = new Message("user", hello.getResult().getFulfillment().getSpeech());
+                Message message = new Message("bot", hello.getResult().getFulfillment().getSpeech().replaceAll("/n","\n"));
                 reference.child(String.valueOf(System.currentTimeMillis())).setValue(message);
                 return hello;
             } catch (AIServiceException e) {

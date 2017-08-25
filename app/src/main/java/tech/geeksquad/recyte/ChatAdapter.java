@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class adapter extends ArrayAdapter<Message> {
+public class ChatAdapter extends ArrayAdapter<Message> {
 
-    public adapter(@NonNull Context context, @NonNull List<Message> objects) {
+    public ChatAdapter(@NonNull Context context, @NonNull List<Message> objects) {
         super(context, 0, objects);
     }
 
@@ -24,10 +24,10 @@ public class adapter extends ArrayAdapter<Message> {
         if (item != null) {
             TextView textView;
             if (item.getAuthor().equalsIgnoreCase("user")) {
-                view = LayoutInflater.from(getContext()).inflate(R.layout.adapterright, parent);
+                view = LayoutInflater.from(getContext()).inflate(R.layout.adapterright, null);
                 textView = (TextView) view.findViewById(R.id.usertext);
             } else {
-                view = LayoutInflater.from(getContext()).inflate(R.layout.adapterleft, parent);
+                view = LayoutInflater.from(getContext()).inflate(R.layout.adapterleft, null);
                 textView = (TextView) view.findViewById(R.id.bottext);
             }
 
