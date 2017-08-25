@@ -144,6 +144,9 @@ public class BotActivity extends AppCompatActivity {
         messageEditText.setText("");
     }
 
+    public void sendPicture(View view) {
+    }
+
     private class messageSendAsyncTask extends AsyncTask<String, Object, AIResponse> {
         @Override
         protected AIResponse doInBackground(String... params) {
