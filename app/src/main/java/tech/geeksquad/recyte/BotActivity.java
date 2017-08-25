@@ -210,7 +210,7 @@ public class BotActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         byte[] data = baos.toByteArray();
 
-
+        Message message = new Message("user", data);
     }
 
     private class messageSendAsyncTask extends AsyncTask<String, Object, AIResponse> {
