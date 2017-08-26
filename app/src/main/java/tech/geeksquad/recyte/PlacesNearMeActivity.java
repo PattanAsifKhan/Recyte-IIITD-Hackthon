@@ -116,7 +116,7 @@ public class PlacesNearMeActivity extends AppCompatActivity {
 
         String url = "https://maps.googleapis.com/maps/api/place/radarsearch/json?location=" +
                 lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude() +
-                "&radius=500&type=recycler&key=AIzaSyCi5xluntOENb_3ll2QWVo0yOM0-KbcGY4";
+                "&radius=500&type=recycling+units&key=AIzaSyCi5xluntOENb_3ll2QWVo0yOM0-KbcGY4";
 
         Log.d(TAG, "getPlaces: " + url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
