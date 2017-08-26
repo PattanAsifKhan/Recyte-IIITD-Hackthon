@@ -28,10 +28,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import ai.api.AIListener;
 import ai.api.AIServiceException;
@@ -44,19 +47,18 @@ import ai.api.model.AIResponse;
 import clarifai2.api.ClarifaiBuilder;
 import clarifai2.api.ClarifaiClient;
 import clarifai2.api.ClarifaiResponse;
-import clarifai2.api.request.ClarifaiRequest;
-import clarifai2.api.request.input.AddInputsRequest;
 import clarifai2.api.request.model.GetModelRequest;
 import clarifai2.api.request.model.PredictRequest;
 import clarifai2.dto.input.ClarifaiInput;
 import clarifai2.dto.model.Model;
-import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 
 public class BotActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_IMAGE = 1;
     PredictRequest<Concept> conceptPredictRequest;
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    byte[] data;
     private AIConfiguration config;
     private AIListener aiListener;
     private AIService aiService;
@@ -219,7 +221,6 @@ public class BotActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void uploadImage(Bitmap bitmap) {
         int byteCount = bitmap.getByteCount() / 1024;
 
@@ -230,20 +231,11 @@ public class BotActivity extends AppCompatActivity {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
-        byte[] data = baos.toByteArray();
+        data = baos.toByteArray();
 
         Message message = new Message("user", data, true);
         reference.child(String.valueOf(System.currentTimeMillis())).setValue(message);
 
-
-        final ClarifaiRequest.OnSuccess<List<ClarifaiOutput<?>>> onSuccess = new ClarifaiRequest.OnSuccess<List<ClarifaiOutput<?>>>() {
-            @Override
-            public void onClarifaiResponseSuccess(List<ClarifaiOutput<?>> clarifaiOutputs) {
-
-            }
-        };
-        AddInputsRequest addInputsRequest = client.addInputs();
-        addInputsRequest.plus(ClarifaiInput.forImage(data));
         garbage = client.getModelByID("garbage");
         new clarifaiSendAsyncTask().execute();
     }
@@ -275,7 +267,28 @@ public class BotActivity extends AppCompatActivity {
             ClarifaiResponse<Model<?>> modelClarifaiResponse = garbage.executeSync();
             Log.d(TAG, "doInBackground: after call");
 
-            Log.d(TAG, "doInBackground: " + modelClarifaiResponse.rawBody());
+            String result = modelClarifaiResponse.get()
+                    .predict()
+                    .withInputs(ClarifaiInput.forImage(data))
+                    .executeSync().rawBody();
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                JSONArray outputs = jsonObject.getJSONArray("outputs");
+                JSONObject jsonObject1 = outputs.getJSONObject(0)
+                        .getJSONObject("data")
+                        .getJSONArray("concepts").getJSONObject(0);
+                result = jsonObject1.getString("name");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d(TAG, "doInBackground: " + result);
+            final String finalResult = result;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new messageSendAsyncTask().execute("#" + finalResult);
+                }
+            });
 
             return null;
         }
