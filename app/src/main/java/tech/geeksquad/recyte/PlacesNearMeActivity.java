@@ -2,6 +2,7 @@ package tech.geeksquad.recyte;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -162,4 +164,16 @@ public class PlacesNearMeActivity extends AppCompatActivity {
     }
 
 
+    public void bookPickup(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Booking Confirmed")
+                .setMessage("Your pickup has been confirmed. Our representative will contact you soon.")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PlacesNearMeActivity.this.finish();
+                    }
+                });
+        builder.show();
+    }
 }
