@@ -141,6 +141,7 @@ public class PlacesNearMeActivity extends AppCompatActivity {
                                     location.getDouble("lng"),
                                     name, address);
                             placesArrayList.add(places);
+                            Log.d(TAG, "onResponse: " + places);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

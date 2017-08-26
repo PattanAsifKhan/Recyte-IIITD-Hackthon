@@ -16,6 +16,16 @@ public class Places {
     public Places() {
     }
 
+    @Override
+    public String toString() {
+        return "Places{" +
+                "lat=" + lat +
+                ", lon=" + lon +
+                ", place='" + place + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
+
     public String getAddress() {
         return address;
     }
