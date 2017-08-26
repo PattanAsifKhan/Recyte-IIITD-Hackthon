@@ -1,13 +1,16 @@
 package tech.geeksquad.recyte;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import ai.api.AIListener;
 import ai.api.AIServiceException;
@@ -37,10 +41,22 @@ import ai.api.android.AIService;
 import ai.api.model.AIError;
 import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
+import clarifai2.api.ClarifaiBuilder;
+import clarifai2.api.ClarifaiClient;
+import clarifai2.api.ClarifaiResponse;
+import clarifai2.api.request.ClarifaiRequest;
+import clarifai2.api.request.input.AddInputsRequest;
+import clarifai2.api.request.model.GetModelRequest;
+import clarifai2.api.request.model.PredictRequest;
+import clarifai2.dto.input.ClarifaiInput;
+import clarifai2.dto.model.Model;
+import clarifai2.dto.model.output.ClarifaiOutput;
+import clarifai2.dto.prediction.Concept;
 
 public class BotActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_IMAGE = 1;
+    PredictRequest<Concept> conceptPredictRequest;
     private AIConfiguration config;
     private AIListener aiListener;
     private AIService aiService;
@@ -51,6 +67,8 @@ public class BotActivity extends AppCompatActivity {
     private String TAG = "bot_activity";
     private AIDataService aiDataService;
     private ListView messageListView;
+    private ClarifaiClient client;
+    private GetModelRequest garbage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +76,7 @@ public class BotActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bot);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        client = new ClarifaiBuilder("c631823d5ef94b0f86d0d6e5a5b1dd7b").buildSync();
 
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("messages").child(user.getUid());
@@ -70,10 +89,10 @@ public class BotActivity extends AppCompatActivity {
         adapter = new ChatAdapter(this, messageArrayList);
         messageListView.setAdapter(adapter);
 
-        reference.addChildEventListener(new ChildEventListener() {
+        reference.limitToLast(1).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildAdded: "+dataSnapshot.getValue());
+                Log.d(TAG, "onChildAdded: " + dataSnapshot.getValue());
                 Message message = dataSnapshot.getValue(Message.class);
                 messageArrayList.add(message);
                 adapter.notifyDataSetChanged();
@@ -184,6 +203,7 @@ public class BotActivity extends AppCompatActivity {
                         .setMessage(getString(R.string.upload_confirm_prompt))
                         .setView(linearLayout)
                         .setPositiveButton(getString(R.string.upload), new DialogInterface.OnClickListener() {
+                            @TargetApi(Build.VERSION_CODES.KITKAT)
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 uploadImage(bitmap);
@@ -199,6 +219,7 @@ public class BotActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void uploadImage(Bitmap bitmap) {
         int byteCount = bitmap.getByteCount() / 1024;
 
@@ -213,6 +234,18 @@ public class BotActivity extends AppCompatActivity {
 
         Message message = new Message("user", data, true);
         reference.child(String.valueOf(System.currentTimeMillis())).setValue(message);
+
+
+        final ClarifaiRequest.OnSuccess<List<ClarifaiOutput<?>>> onSuccess = new ClarifaiRequest.OnSuccess<List<ClarifaiOutput<?>>>() {
+            @Override
+            public void onClarifaiResponseSuccess(List<ClarifaiOutput<?>> clarifaiOutputs) {
+
+            }
+        };
+        AddInputsRequest addInputsRequest = client.addInputs();
+        addInputsRequest.plus(ClarifaiInput.forImage(data));
+        garbage = client.getModelByID("garbage");
+        new clarifaiSendAsyncTask().execute();
     }
 
     private class messageSendAsyncTask extends AsyncTask<String, Object, AIResponse> {
@@ -234,5 +267,19 @@ public class BotActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    private class clarifaiSendAsyncTask extends AsyncTask<String, Object, AIResponse> {
+        @Override
+        protected AIResponse doInBackground(String... params) {
+            Log.d(TAG, "doInBackground: before call");
+            ClarifaiResponse<Model<?>> modelClarifaiResponse = garbage.executeSync();
+            Log.d(TAG, "doInBackground: after call");
+
+            Log.d(TAG, "doInBackground: " + modelClarifaiResponse.rawBody());
+
+            return null;
+        }
+    }
+
 
 }
