@@ -114,9 +114,8 @@ public class PlacesNearMeActivity extends AppCompatActivity {
     private void getPlaces() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        String url = "https://maps.googleapis.com/maps/api/place/radarsearch/json?location=" +
-                lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude() +
-                "&radius=500&type=recycling+units&key=AIzaSyCi5xluntOENb_3ll2QWVo0yOM0-KbcGY4";
+        String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyCi5xluntOENb_3ll2QWVo0yOM0-KbcGY4&query=recycler&location=" +
+                lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
 
         Log.d(TAG, "getPlaces: " + url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
@@ -126,11 +125,18 @@ public class PlacesNearMeActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONArray results = response.getJSONArray("results");
-                            for (int i = 0; i < results.length(); i++) {
+                            for (int i = 0; i < min(30, results.length()); i++) {
                                 JSONObject place = results.getJSONObject(i);
                                 JSONObject location = place.getJSONObject("geometry").getJSONObject("location");
-                                String place_id = place.getString("place_id");
-                                findPlaceInfo(location, place_id);
+
+                                String name = place.getString("name");
+                                String address = place.getString("formatted_address");
+                                Places places = new Places(location.getDouble("lat"),
+                                        location.getDouble("lng"),
+                                        name, address);
+                                placesArrayList.add(places);
+                                Log.d(TAG, "onResponse: " + places);
+                                placeAdapter.notifyDataSetChanged();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -148,36 +154,11 @@ public class PlacesNearMeActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void findPlaceInfo(final JSONObject location, String place_id) {
-        String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" +
-                place_id + "&key=AIzaSyCi5xluntOENb_3ll2QWVo0yOM0-KbcGY4";
-        JsonObjectRequest placeJsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            String name = response.getJSONObject("result").getString("name");
-                            String address = response.getJSONObject("result").getString("formatted_address");
-                            Places places = new Places(location.getDouble("lat"),
-                                    location.getDouble("lng"),
-                                    name, address);
-                            placesArrayList.add(places);
-                            Log.d(TAG, "onResponse: " + places);
-                            placeAdapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "onErrorResponse: " + error.toString());
-                    }
-                }
-        );
-        Volley.newRequestQueue(this).add(placeJsonObjectRequest);
+    private int min(int i, int length) {
+        if (i > length)
+            return length;
+        else
+            return i;
     }
 
 
