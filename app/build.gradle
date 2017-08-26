@@ -56,6 +56,7 @@ dependencies {
     compile 'com.clarifai.clarifai-api2:core:2.2.12'
     compile 'org.apache.logging.log4j:log4j-api:2.8.2'
     testCompile 'junit:junit:4.12'
+    compile 'com.dubsmash.volley:library:2.0.1'
 }
 
 
