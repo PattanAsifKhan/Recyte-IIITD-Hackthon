@@ -6,9 +6,10 @@
 
 
     <LinearLayout
-        android:layout_width="250dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:background="@drawable/usermessage"
         android:gravity="end">
 
         <TextView
@@ -16,9 +17,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:maxWidth="250dp"
             android:autoLink="all"
-            android:background="@drawable/usermessage"
             android:text="message" />
+
+        <ImageView
+            android:id="@+id/userimage"
+            android:layout_width="200dp"
+            android:maxWidth="200dp"
+            android:layout_height="100dp"
+            android:layout_gravity="end" />
     </LinearLayout>
 
 </LinearLayout>

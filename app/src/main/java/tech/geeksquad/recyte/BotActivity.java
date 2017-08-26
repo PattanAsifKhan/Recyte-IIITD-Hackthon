@@ -73,6 +73,7 @@ public class BotActivity extends AppCompatActivity {
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "onChildAdded: "+dataSnapshot.getValue());
                 Message message = dataSnapshot.getValue(Message.class);
                 messageArrayList.add(message);
                 adapter.notifyDataSetChanged();
@@ -210,7 +211,8 @@ public class BotActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         byte[] data = baos.toByteArray();
 
-        Message message = new Message("user", data);
+        Message message = new Message("user", data, true);
+        reference.child(String.valueOf(System.currentTimeMillis())).setValue(message);
     }
 
     private class messageSendAsyncTask extends AsyncTask<String, Object, AIResponse> {

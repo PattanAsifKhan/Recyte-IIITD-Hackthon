@@ -1,33 +1,37 @@
 package tech.geeksquad.recyte;
 
+import android.util.Base64;
+
 public class Message {
     private String author;
     private String message;
-    private boolean isImage;
-    private byte[] image;
+    private int isImage;
+    private String data;
 
     public Message(String author, String message) {
         this.author = author;
         this.message = message;
-        isImage = false;
+        isImage = 0;
+        data = "none";
     }
 
-    public Message(String author, byte[] image) {
+    public Message(String author, byte[] data, boolean isImage) {
         this.author = author;
-        this.image = image;
-        isImage = true;
+        this.isImage = 1;
+        this.data = Base64.encodeToString(data, Base64.DEFAULT);
+        message = "none";
     }
 
     public Message() {
 
     }
 
-    public boolean isImage() {
+    public int getIsImage() {
         return isImage;
     }
 
-    public byte[] getImage() {
-        return image;
+    public String getData() {
+        return data;
     }
 
     public String getAuthor() {
