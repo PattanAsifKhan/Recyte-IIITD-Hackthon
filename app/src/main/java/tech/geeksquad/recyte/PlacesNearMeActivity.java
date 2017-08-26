@@ -163,8 +163,8 @@ public class PlacesNearMeActivity extends AppCompatActivity {
                                     location.getDouble("lng"),
                                     name, address);
                             placesArrayList.add(places);
-                            placeAdapter.notifyDataSetChanged();
                             Log.d(TAG, "onResponse: " + places);
+                            placeAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -173,7 +173,7 @@ public class PlacesNearMeActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.d(TAG, "onErrorResponse: " + error.toString());
                     }
                 }
         );
