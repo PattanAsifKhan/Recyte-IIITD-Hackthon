@@ -2,16 +2,21 @@ package tech.geeksquad.recyte;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,6 +40,7 @@ public class PlacesNearMeActivity extends AppCompatActivity {
     private LocationListener locationListener;
 
     private ArrayList<Places> placesArrayList;
+    private PlaceAdapter placeAdapter;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -42,7 +48,23 @@ public class PlacesNearMeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_near_me);
 
+        ListView listView = (ListView) findViewById(R.id.places_list);
+        listView.setEmptyView(findViewById(R.id.loading));
+
         placesArrayList = new ArrayList<>();
+        placeAdapter = new PlaceAdapter(this, placesArrayList);
+        listView.setAdapter(placeAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Places places = placesArrayList.get(position);
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + places.getLat() + "," + places.getLon());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
 
         locationListener = new LocationListener() {
             @Override
@@ -141,6 +163,7 @@ public class PlacesNearMeActivity extends AppCompatActivity {
                                     location.getDouble("lng"),
                                     name, address);
                             placesArrayList.add(places);
+                            placeAdapter.notifyDataSetChanged();
                             Log.d(TAG, "onResponse: " + places);
                         } catch (JSONException e) {
                             e.printStackTrace();
