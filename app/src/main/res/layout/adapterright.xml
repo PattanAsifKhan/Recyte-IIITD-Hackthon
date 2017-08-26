@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:layout_margin="10dp"
         android:background="@drawable/usermessage"
         android:gravity="end">
 
@@ -17,16 +18,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:maxWidth="250dp"
             android:autoLink="all"
+            android:maxWidth="250dp"
             android:text="message" />
 
         <ImageView
             android:id="@+id/userimage"
             android:layout_width="200dp"
-            android:maxWidth="200dp"
             android:layout_height="100dp"
-            android:layout_gravity="end" />
+            android:layout_gravity="end"
+            android:maxWidth="200dp" />
     </LinearLayout>
 
 </LinearLayout>
