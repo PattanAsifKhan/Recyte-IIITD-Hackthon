@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/back"
-    xmlns:cardview="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:background="@drawable/back"
+    android:orientation="vertical"
     tools:context="tech.geeksquad.recyte.ProfileActivity">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="PROFILE"
-    android:textColor="#319"
-    android:textSize="20sp"
-    android:background="#fff"
-    android:gravity="center"
-    android:id="@+id/head"/>
+
+    <TextView
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:gravity="center"
+        android:text="PROFILE"
+        android:textColor="#319"
+        android:textSize="20sp" />
+
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_margin="20dp"
         android:elevation="12dp"
-        android:layout_gravity="center"
         android:innerRadius="0dp"
         android:shape="oval"
         android:thicknessRatio="1.9"
@@ -33,45 +36,59 @@
             android:layout_height="150dp"
             android:contentDescription="user_profile_picture"
             android:onClick="ChangeProfilePic"
-            android:src="@drawable/sanjit" />
+            android:src="@drawable/women" />
     </android.support.v7.widget.CardView>
+
     <LinearLayout
+        android:id="@+id/namecard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/namecard">
+        android:orientation="vertical">
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="50sp"
                 android:gravity=""
-                android:text="NAME : Sanjit Singh Chouhan"
-                android:id="@+id/username"/>
+                android:text="NAME : XYZ" />
         </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
             <TextView
+                android:id="@+id/Place"
                 android:layout_width="match_parent"
                 android:layout_height="50sp"
                 android:gravity=""
-                android:text="PLACE : Delhi,Safdarjung "
-                android:id="@+id/Place"/>
+                android:text="PLACE : Delhi,Safdarjung " />
         </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
             <TextView
+                android:id="@+id/points"
                 android:layout_width="match_parent"
                 android:layout_height="50sp"
                 android:gravity=""
-                android:text="points : 0"
-                android:id="@+id/points"/>
+                android:text="points : 0" />
         </android.support.v7.widget.CardView>
+
+        <Button
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:onClick="placeNearMe"
+            android:layout_height="wrap_content"
+            android:text="Recycling Places Near me" />
     </LinearLayout>
 
 
