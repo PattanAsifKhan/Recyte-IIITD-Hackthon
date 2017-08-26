@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -22,8 +23,12 @@ public class PlaceAdapter extends ArrayAdapter<Places> {
         View view = convertView;
         if (item != null) {
             if (view == null) {
-                LayoutInflater.from(getContext()).inflate();
+                view = LayoutInflater.from(getContext()).inflate(R.layout.maplayout, null);
             }
+            TextView name = (TextView) view.findViewById(R.id.placename);
+            TextView address = (TextView) view.findViewById(R.id.address);
+            name.setText(item.getPlace());
+            address.setText(item.getAddress());
         }
         return view;
     }
