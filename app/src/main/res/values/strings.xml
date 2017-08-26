@@ -2,4 +2,8 @@
     <string name="app_name">Recyte</string>
     <string name="phone">Phone</string>
     <string name="login">Login</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="upload_confirm_prompt">Are you sure you want to upload this?</string>
+    <string name="upload">Upload</string>
+    <string name="cancel">Cancel</string>
 </resources>
