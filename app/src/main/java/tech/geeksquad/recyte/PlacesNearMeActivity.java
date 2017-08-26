@@ -59,12 +59,33 @@ public class PlacesNearMeActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Places places = placesArrayList.get(position);
-                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + places.getLat() + "," + places.getLon());
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                startActivity(mapIntent);
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(PlacesNearMeActivity.this)
+                        .setItems(new CharSequence[]{"Book a Pickup", "Directions"}, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == 0) {
+                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(PlacesNearMeActivity.this)
+                                            .setTitle("Pickup Confirmed")
+                                            .setMessage("You Pickup has been confirmed. Our representative will contact you shortly.")
+                                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    PlacesNearMeActivity.this.finish();
+                                                }
+                                            });
+                                    builder1.show();
+                                } else {
+                                    Places places = placesArrayList.get(position);
+                                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + places.getLat() + "," + places.getLon());
+                                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                    mapIntent.setPackage("com.google.android.apps.maps");
+                                    startActivity(mapIntent);
+                                }
+                            }
+                        });
+                builder.show();
             }
         });
 
@@ -164,16 +185,4 @@ public class PlacesNearMeActivity extends AppCompatActivity {
     }
 
 
-    public void bookPickup(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("Booking Confirmed")
-                .setMessage("Your pickup has been confirmed. Our representative will contact you soon.")
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        PlacesNearMeActivity.this.finish();
-                    }
-                });
-        builder.show();
-    }
 }
